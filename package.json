@@ -1,0 +1,23 @@
+{
+  "name": "flojo-chrome-extension",
+  "version": "1.0.0",
+  "description": "A powerful Chrome extension for recording your screen and webcam for YouTube tutorials",
+  "main": "popup.js",
+  "scripts": {
+    "generate-icons": "node generate-icons.js"
+  },
+  "keywords": [
+    "chrome-extension",
+    "screen-recording",
+    "webcam",
+    "youtube",
+    "tutorial",
+    "recorder",
+    "loom"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "canvas": "^2.11.2"
+  }
+}
