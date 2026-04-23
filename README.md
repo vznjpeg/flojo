@@ -1,218 +1,201 @@
-# Flojo - Screen Recorder Chrome Extension
+# Reddit Thread Scraper Extension
 
-A powerful Chrome extension for recording your screen and webcam for YouTube tutorials. Similar to Loom, Flojo provides an intuitive interface with a floating control menu bar.
+A powerful Chrome extension for scraping and exporting Reddit comment threads. Built with WXT framework, TypeScript, and React.
 
 ## Features
 
-✨ **Screen Recording** - Record your entire screen at multiple quality levels (480p, 720p, 1080p)
-
-🎥 **Webcam PiP** - Picture-in-Picture mode with your webcam displayed in a cropped circle
-
-🎙️ **Audio Recording** - Record both system audio and microphone input
-
-⏸️ **Pause/Resume** - Pause and resume recordings without losing data
-
-🎛️ **Floating Menu Bar** - Minimizable control bar that floats on top of your content
-
-📥 **Easy Download** - Download your recording as a WebM video file
+- **Comment Extraction**: Automatically scrapes usernames, comment text, timestamps, and upvotes
+- **Thread Preservation**: Maintains comment threading structure to understand reply relationships
+- **Modern UI**: Clean, dark-mode popup interface with real-time scraping progress
+- **Multiple Export Formats**:
+  - JSON: Complete structured data
+  - CSV: Spreadsheet-friendly format
+  - Clipboard: Quick copy for sharing
+- **Nested Reply Support**: Intelligently handles deeply nested Reddit threads
+- **Manifest V3 Compliant**: Modern extension architecture with proper security practices
+- **Robust Selectors**: DOM scrapers designed to be resilient to minor Reddit changes
 
 ## Installation
 
-1. Clone or download this repository
-2. Open Chrome and go to `chrome://extensions/`
-3. Enable **Developer mode** (toggle in top right)
-4. Click **Load unpacked** and select the extension folder
-5. The extension icon will appear in your Chrome toolbar
+### From Source (Development)
 
-## Setup
+1. Clone the repository:
+   ```bash
+   git clone <repo-url>
+   cd flojo
+   ```
 
-### Generate Icons (Optional)
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-The extension includes placeholder icon files. To generate proper icons, run:
+3. Build the extension:
+   ```bash
+   npm run build
+   ```
+
+4. Load the extension in Chrome:
+   - Open `chrome://extensions/`
+   - Enable "Developer mode"
+   - Click "Load unpacked"
+   - Select the `dist` folder
+
+### Development Mode
+
+For active development with hot reload:
 
 ```bash
-node generate-icons.js
+npm run dev
 ```
 
-This creates 16x16, 48x48, and 128x128 PNG icons in the `icons/` folder.
-
-### Create Icons Folder
-
-```bash
-mkdir -p icons
-```
-
-For now, the extension will work without icons, but you can add them later.
+This starts the WXT dev server and watches for changes.
 
 ## Usage
 
-1. Click the **Flojo icon** in your Chrome toolbar
-2. Configure your recording settings:
-   - ✓ Record Screen
-   - ✓ Record Webcam (PiP)
-   - ✓ Record Audio
-   - ✓ Record System Audio
-   - Video Quality (480p, 720p, 1080p)
-3. Click **Start Recording**
-4. Grant permissions for:
-   - Screen capture
-   - Microphone access
-   - System audio (if available)
-5. The floating **menu bar** appears on your page with controls:
-   - **⏸ Pause** - Pause/resume recording
-   - **🔊 Mute** - Toggle audio
-   - **↻ Restart** - Start a new recording
-   - **−** - Minimize menu bar
-   - **✕** - Stop recording
-6. Click **Stop** in the popup or **✕** on the floating menu
-7. Download your recording in the popup
+1. Navigate to any Reddit thread (e.g., `reddit.com/r/...`)
+2. Click the Reddit Scraper extension icon
+3. Click "Scrape Current Thread" button
+4. Wait for the scraping to complete
+5. View results in the popup table
+6. Export using your preferred format:
+   - **JSON**: Download as `.json` file
+   - **CSV**: Download as `.csv` spreadsheet
+   - **Copy**: Copy JSON to clipboard
 
-## Features Explained
-
-### Floating Menu Bar
-
-- **Draggable** - Drag the menu bar around your screen
-- **Minimizable** - Collapse the menu to just a status indicator
-- **Auto-minimize** - Option to auto-minimize after 2 seconds
-- **Status Indicator** - Green pulse = recording, Orange = paused
-
-### Webcam Display
-
-- Appears as a **cropped circle** in the bottom-right corner
-- Shows your face while you record your screen
-- White border for visibility
-- Automatically scales to fit the circle
-
-### Recording Quality
-
-Choose from three preset quality levels:
-- **1080p** - Full HD (1920x1080) - Best for tutorials, larger files
-- **720p** - HD (1280x720) - Good quality, balanced file size
-- **480p** - SD (854x480) - Smaller files, adequate for quick demos
-
-### Audio Options
-
-- **Microphone** - Your voice
-- **System Audio** - Application sounds, background music
-- Both can be toggled independently
-- Mute button on floating menu for quick control
-
-## Keyboard Shortcuts
-
-Currently, keyboard shortcuts are not implemented but can be added. All controls are available through:
-- The popup menu in the extension
-- The floating menu bar on your page
-
-## Troubleshooting
-
-### Permission Denied Errors
-
-- Make sure you grant the extension permissions when prompted
-- Check Chrome settings > Privacy and security > Site settings > Microphone/Camera
-
-### Webcam Not Showing
-
-- Verify your camera is working in other apps
-- Check that "Record Webcam" is enabled in settings
-- Grant microphone and camera permissions when prompted
-
-### Audio Not Recording
-
-- System audio recording only works on Linux and some Windows setups
-- On macOS, you may need to install additional audio drivers
-- Microphone audio is always available if device permissions are granted
-
-### Black Screen in Recording
-
-- Make sure you selected the correct display/window when prompted
-- Try restarting the recording
-- Check if other apps are using screen capture
-
-## Files Structure
+## Project Structure
 
 ```
-flojo/
-├── manifest.json       - Extension configuration
-├── popup.html         - Popup interface
-├── popup.js          - Popup logic and controls
-├── content.js        - Page-level recording logic
-├── background.js     - Service worker
-├── styles.css        - Popup styling
-├── icons/            - Extension icons
-│   ├── icon-16.png
-│   ├── icon-48.png
-│   └── icon-128.png
-└── README.md         - This file
+src/
+├── entrypoints/
+│   ├── content.ts          # Content script for Reddit pages
+│   └── popup/
+│       ├── index.tsx       # Popup entry point
+│       ├── Popup.tsx       # Main React component
+│       └── popup.css       # Popup styles
+├── components/
+│   ├── ResultsTable.tsx    # Collapsible results display
+│   └── ExportMenu.tsx      # Export options UI
+├── hooks/
+│   └── useScrape.ts        # React hook for scraping logic
+├── lib/
+│   ├── reddit-scraper.ts   # DOM scraping logic
+│   └── export-utils.ts     # Export format functions
+└── types/
+    └── reddit.ts           # TypeScript type definitions
 ```
 
-## How It Works
+## Architecture
 
-1. **Popup Control** - Main UI for starting/stopping recordings and configuring settings
-2. **Content Script** - Runs on your page, handles screen/webcam capture and compositing
-3. **Canvas Compositing** - Combines screen + webcam into single video stream
-4. **MediaRecorder API** - Records the composite stream
-5. **Blob Storage** - Saves recording data, allows download as WebM file
+### Content Script (`content.ts`)
+- Runs on `reddit.com/*` pages
+- Listens for messages from popup
+- Executes DOM scraping when triggered
+- Returns structured comment data
 
-## Browser Compatibility
+### Popup (`Popup.tsx`)
+- React component with dark mode design
+- Displays scraping progress and results
+- Manages export options
+- Shows statistics and comment previews
 
-- ✅ Chrome 72+
-- ✅ Edge 79+
-- ❌ Firefox (requires WebExtensions API modifications)
-- ❌ Safari (requires macOS app)
+### Scraper (`reddit-scraper.ts`)
+- Robust CSS selectors for Reddit's comment elements
+- Handles nested replies intelligently
+- Extracts: username, text, timestamp, upvotes, nesting level
+- Returns structured `ScrapingResult` with metadata
 
-## Performance Tips
+### Export Utilities (`export-utils.ts`)
+- JSON: Pretty-printed structured format
+- CSV: Spreadsheet format with proper escaping
+- Clipboard: Direct browser clipboard integration
 
-- Use **720p** for balanced quality and file size
-- Close unnecessary tabs/applications before recording
-- Record with decent lighting for best webcam quality
-- Use a good microphone for better audio quality
+## Configuration
 
-## Advanced Usage
+The extension is configured via `wxt.config.ts`:
 
-### Custom Output Format
+```typescript
+export default defineConfig({
+  manifest: {
+    permissions: ['storage', 'scripting', 'activeTab'],
+    host_permissions: ['*://reddit.com/*', '*://www.reddit.com/*'],
+    // ... other manifest settings
+  },
+});
+```
 
-To convert WebM to MP4:
+## Building for Production
+
 ```bash
-ffmpeg -i recording.webm -c:v libx264 -preset medium recording.mp4
+npm run build
+npm run zip
 ```
 
-### Editing
+This creates an optimized bundle and a `.zip` file ready for distribution.
 
-The WebM file can be edited in:
-- Adobe Premiere Pro
-- Final Cut Pro
-- DaVinci Resolve
-- OBS Studio
-- Shotcut (free)
+## Browser Support
 
-## Known Limitations
+- Chrome 88+
+- Edge 88+
+- Brave
+- Other Chromium-based browsers
 
-- WebM format is the native output (MP4 requires additional codecs)
-- System audio may not work on all Windows versions
-- PiP circle size is fixed (can be customized in CSS)
-- No built-in editing features
+## Permissions
 
-## Future Enhancements
+- **`storage`**: Store extension state and settings
+- **`scripting`**: Inject content script on Reddit
+- **`activeTab`**: Access current tab for scraping
+- **Host permission**: `reddit.com/*` and `www.reddit.com/*`
 
-- [ ] MP4 export support
-- [ ] Customizable PiP size and position
-- [ ] Multiple video format support
-- [ ] Annotation/drawing tools
-- [ ] Real-time transcription
-- [ ] Auto-upload to cloud storage
-- [ ] Video editing built-in
-- [ ] Keyboard shortcuts
-- [ ] Recording presets
-- [ ] Auto-save functionality
+## Limitations
+
+- Works only on Reddit's new design (uses data-testid selectors)
+- Requires JavaScript to be enabled on reddit.com
+- Respects Reddit's DOM structure; major redesigns may require selector updates
+- Rate limited by browser's injection capabilities
+
+## Development
+
+### Type Checking
+
+```bash
+npm run typecheck
+```
+
+### Code Quality
+
+```bash
+npm run lint
+```
 
 ## License
 
-MIT License - Feel free to use and modify!
+MIT
 
-## Support
+## Contributing
 
-Found a bug? Have a feature request? Open an issue on GitHub or reach out!
+Contributions welcome! Please ensure code follows the existing style and includes proper TypeScript types.
 
----
+## Troubleshooting
 
-**Happy recording! 🎥✨**
+### Extension not appearing
+- Refresh the Reddit page after installation
+- Check extension is enabled in `chrome://extensions/`
+
+### Scraping returns no comments
+- Verify you're on a Reddit thread (not a subreddit listing)
+- Check browser console for errors (F12 > Console)
+- Some Reddit threads may have custom styling that affects selectors
+
+### Export not working
+- Check that you have permission to download files
+- Verify clipboard permission is granted in extension settings
+- Try a different export format
+
+## Credits
+
+Built with:
+- [WXT](https://wxt.dev/) - Web extension framework
+- [React](https://react.dev/) - UI library
+- [TypeScript](https://www.typescriptlang.org/) - Type safety
+- [Lucide React](https://lucide.dev/) - Icons

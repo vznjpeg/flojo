@@ -1,23 +1,26 @@
 {
-  "name": "flojo-chrome-extension",
+  "name": "reddit-scraper-extension",
   "version": "1.0.0",
-  "description": "A powerful Chrome extension for recording your screen and webcam for YouTube tutorials",
-  "main": "popup.js",
+  "description": "A Chrome extension for scraping Reddit comment threads with WXT framework",
+  "type": "module",
   "scripts": {
-    "generate-icons": "node generate-icons.js"
+    "dev": "wxt",
+    "build": "wxt build",
+    "zip": "wxt zip",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint ."
   },
-  "keywords": [
-    "chrome-extension",
-    "screen-recording",
-    "webcam",
-    "youtube",
-    "tutorial",
-    "recorder",
-    "loom"
-  ],
-  "author": "Your Name",
-  "license": "MIT",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "lucide-react": "^0.344.0"
+  },
   "devDependencies": {
-    "canvas": "^2.11.2"
+    "@types/chrome": "^0.0.246",
+    "@types/node": "^20.10.6",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "typescript": "^5.3.3",
+    "wxt": "^0.17.1"
   }
 }
